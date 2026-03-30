@@ -1,0 +1,27 @@
+-- Langkah-langkah membuat tabel users di MySQL
+-- =============================================
+
+-- 1. Buka phpMyAdmin atau MySQL CLI
+-- 2. Pilih database hotel_db
+-- 3. Jalankan query berikut:
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    nama VARCHAR(100) NOT NULL,
+    foto VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Jika tabel sudah ada, tambahkan kolom foto:
+-- ALTER TABLE users ADD COLUMN foto VARCHAR(255) DEFAULT NULL;
+
+-- Contoh data user (password: admin12345)
+INSERT INTO users (username, password, nama) VALUES 
+('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Administrator');
+
+-- Catatan:
+-- Password di atas sudah di-hash menggunakan password_hash()
+-- Untuk login gunakan: username=admin, password=password
+-- Foto akan disimpan di folder user/uploads/

@@ -1,0 +1,11 @@
+# Blokir akses langsung ke file PHP
+<FilesMatch "\.php$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Blokir akses ke file konfigurasi
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
