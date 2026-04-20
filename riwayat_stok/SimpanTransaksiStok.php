@@ -1,6 +1,5 @@
 <?php
 require_once '../auth.php';
-csrf_check();
 include "../koneksi.php";
 
 $id_supplier = $_POST['id_supplier'];

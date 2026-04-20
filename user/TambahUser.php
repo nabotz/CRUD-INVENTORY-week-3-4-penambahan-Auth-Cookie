@@ -9,7 +9,7 @@ $current_page = 'user';
 <html lang="id">
 
 <head>
-    <title>Tambah User - Sistem Inventori</title>
+    <title>Tambah User - Hotel System</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/dashboard.css">
@@ -57,7 +57,6 @@ $current_page = 'user';
 
                 <div class="card" style="max-width: 600px;">
                     <form action="SimpanUser.php" method="POST" enctype="multipart/form-data" id="formUser">
-                        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                         <div class="form-group">
                             <label class="form-label">Foto</label>
                             <input type="file" name="foto" class="form-control" accept="image/*" required>

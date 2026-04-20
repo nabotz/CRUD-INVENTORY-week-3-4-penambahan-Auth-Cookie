@@ -38,7 +38,6 @@ $produk_list = $koneksi->query("SELECT p.kode_produk, k.nama_kategori, k.harga_s
             <div class="content">
                 <div class="card" style="max-width: 600px;">
                     <form action="SimpanTransaksiStok.php" method="POST">
-                        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                         <div class="form-group">
                             <label class="form-label">Supplier</label>
                             <select name="id_supplier" class="form-control" required>

@@ -1,9 +1,6 @@
 <?php
 session_start();
 include 'koneksi.php';
-include_once 'includes/csrf.php';
-include_once 'includes/image_helper.php';
-csrf_check();
 
 /* ================== FUNGSI SANITASI ================== */
 function bersih($data)
@@ -13,8 +10,8 @@ function bersih($data)
 
 /* ================== AMBIL DATA FORM ================== */
 $username = bersih($_POST['username'] ?? '');
-$password = $_POST['password'] ?? '';
-$confirm_password = $_POST['confirm_password'] ?? '';
+$password = bersih($_POST['password'] ?? '');
+$confirm_password = bersih($_POST['confirm_password'] ?? '');
 $nama = bersih($_POST['nama'] ?? '');
 
 /* ================== VALIDASI PASSWORD ================== */
@@ -52,28 +49,15 @@ if (!in_array($ext, $allowedExt)) {
     exit;
 }
 
-if ($_FILES['foto']['size'] > 2 * 1024 * 1024) {
-    $_SESSION['register_error'] = 'Ukuran file maksimal 2MB!';
-    header('Location: register.php');
-    exit;
+$namaFotoBaru = uniqid("foto_") . "." . $ext;
+$folderUpload = "user/uploads/";
+
+// Buat folder jika belum ada
+if (!file_exists($folderUpload)) {
+    mkdir($folderUpload, 0777, true);
 }
 
-$finfo = finfo_open(FILEINFO_MIME_TYPE);
-$mime = finfo_file($finfo, $tmpFile);
-finfo_close($finfo);
-if (!in_array($mime, ['image/jpeg', 'image/png', 'image/gif'])) {
-    $_SESSION['register_error'] = 'Tipe file tidak valid!';
-    header('Location: register.php');
-    exit;
-}
-if (!getimagesize($tmpFile)) {
-    $_SESSION['register_error'] = 'File bukan gambar yang valid!';
-    header('Location: register.php');
-    exit;
-}
-
-$namaFotoBaru = proses_gambar($_FILES['foto'], 'user/uploads/');
-if (!$namaFotoBaru) {
+if (!move_uploaded_file($tmpFile, $folderUpload . $namaFotoBaru)) {
     $_SESSION['register_error'] = 'Gagal menyimpan foto!';
     header('Location: register.php');
     exit;
@@ -89,8 +73,7 @@ try {
     $stmt->execute([$username, $hashed_password, $nama, $namaFotoBaru]);
     $_SESSION['register_success'] = 'Registrasi berhasil! Silakan login.';
 } catch (\PDOException $e) {
-    error_log("Error register: " . $e->getMessage());
-    $_SESSION['register_error'] = 'Registrasi gagal, coba lagi.';
+    $_SESSION['register_error'] = 'Error: ' . $e->getMessage();
 }
 
 $stmt = null;

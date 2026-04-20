@@ -1,8 +1,6 @@
 <?php
 require_once '../auth.php';
-csrf_check();
 include "../koneksi.php";
-include_once '../includes/image_helper.php';
 
 /* ================== FUNGSI SANITASI ================== */
 function bersih($data)
@@ -42,27 +40,24 @@ if (!isset($_FILES['foto']) || $_FILES['foto']['error'] != 0) {
     exit;
 }
 
-if ($_FILES['foto']['size'] > 2 * 1024 * 1024) {
-    header('Location: TambahUser.php?error=ukuran');
-    exit;
-}
-
+$namaFile = $_FILES['foto']['name'];
 $tmpFile = $_FILES['foto']['tmp_name'];
-$ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
+$ext = strtolower(pathinfo($namaFile, PATHINFO_EXTENSION));
+$allowedExt = ['jpg', 'jpeg', 'png', 'gif'];
 
-if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+if (!in_array($ext, $allowedExt)) {
     header('Location: TambahUser.php?error=format');
     exit;
 }
 
-$mime = mime_content_type($tmpFile);
-if (!in_array($mime, ['image/jpeg', 'image/png', 'image/gif']) || !getimagesize($tmpFile)) {
-    header('Location: TambahUser.php?error=format');
-    exit;
+$namaFotoBaru = uniqid("foto_") . "." . $ext;
+$folderUpload = "uploads/";
+
+if (!file_exists($folderUpload)) {
+    mkdir($folderUpload, 0777, true);
 }
 
-$namaFotoBaru = proses_gambar($_FILES['foto'], 'uploads/');
-if (!$namaFotoBaru) {
+if (!move_uploaded_file($tmpFile, $folderUpload . $namaFotoBaru)) {
     header('Location: TambahUser.php?error=upload');
     exit;
 }

@@ -1,8 +1,6 @@
 <?php
 require_once '../auth.php';
-csrf_check();
 include "../koneksi.php";
-include_once '../includes/image_helper.php';
 
 function bersih($data)
 {
@@ -16,27 +14,24 @@ $stok_minimum = bersih($_POST['stok_minimum'] ?? '');
 $namaFotoBaru = null;
 
 if (isset($_FILES['foto_kamar']) && $_FILES['foto_kamar']['error'] == 0) {
+    $namaFile = $_FILES['foto_kamar']['name'];
     $tmpFile = $_FILES['foto_kamar']['tmp_name'];
-    $ext = strtolower(pathinfo($_FILES['foto_kamar']['name'], PATHINFO_EXTENSION));
+    $ext = strtolower(pathinfo($namaFile, PATHINFO_EXTENSION));
+    $allowedExt = ['jpg', 'jpeg', 'png', 'gif'];
 
-    if ($_FILES['foto_kamar']['size'] > 2 * 1024 * 1024) {
-        header('Location: TambahKategori.php?error=ukuran');
-        exit;
-    }
-
-    if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+    if (!in_array($ext, $allowedExt)) {
         header('Location: TambahKategori.php?error=format');
         exit;
     }
 
-    $mime = mime_content_type($tmpFile);
-    if (!in_array($mime, ['image/jpeg', 'image/png', 'image/gif']) || !getimagesize($tmpFile)) {
-        header('Location: TambahKategori.php?error=format');
-        exit;
+    $namaFotoBaru = uniqid("foto_") . "." . $ext;
+    $folderUpload = "uploads/";
+
+    if (!file_exists($folderUpload)) {
+        mkdir($folderUpload, 0777, true);
     }
 
-    $namaFotoBaru = proses_gambar($_FILES['foto_kamar'], 'uploads/');
-    if (!$namaFotoBaru) {
+    if (!move_uploaded_file($tmpFile, $folderUpload . $namaFotoBaru)) {
         header('Location: TambahKategori.php?error=upload');
         exit;
     }

@@ -45,7 +45,6 @@ $kategori = $koneksi->query("SELECT * FROM kategori ORDER BY nama_kategori")->fe
             <div class="content">
                 <div class="card" style="max-width: 600px;">
                     <form action="SimpanKoreksiProduk.php" method="POST">
-                        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                         <input type="hidden" name="id" value="<?= $row['kode_produk'] ?>">
 
                         <div class="form-group">
@@ -53,11 +52,6 @@ $kategori = $koneksi->query("SELECT * FROM kategori ORDER BY nama_kategori")->fe
                             <input type="text" name="kode_produk" class="form-control" readonly
                                 value="<?= htmlspecialchars($row['kode_produk']) ?>"
                                 style="background: #f1f5f9; cursor: not-allowed;">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Nama Produk</label>
-                            <input type="text" name="nama_produk" class="form-control" required maxlength="100"
-                                value="<?= htmlspecialchars($row['nama_produk']) ?>">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Kategori</label>

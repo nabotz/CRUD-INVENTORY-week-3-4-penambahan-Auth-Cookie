@@ -56,9 +56,8 @@ $result = $koneksi->query("SELECT * FROM kategori ORDER BY nama_kategori")->fetc
                                         <td><?= $no++ ?></td>
                                         <td>
                                             <?php if (!empty($row['foto'])): ?>
-                                                <img src="uploads/thumbs/<?= htmlspecialchars($row['foto']) ?>"
-                                                    alt="<?= htmlspecialchars($row['nama_kategori']) ?>"
-                                                    onerror="this.src='uploads/<?= htmlspecialchars($row['foto']) ?>'">
+                                                <img src="uploads/<?= htmlspecialchars($row['foto']) ?>"
+                                                    alt="<?= htmlspecialchars($row['nama_kategori']) ?>">
                                             <?php else: ?>
                                                 <span style="color:#94a3b8;">-</span>
                                             <?php endif; ?>
