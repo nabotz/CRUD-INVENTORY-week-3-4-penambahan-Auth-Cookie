@@ -1,12 +1,18 @@
 <?php
 require_once '../auth.php';
+csrf_check();
 include "../koneksi.php";
 
-$nama = $_POST['nama'];
-$alamat = $_POST['alamat'];
-$no_telp = $_POST['no_telp'];
-$no_npwp = $_POST['no_npwp'];
-$jenis_supplier = $_POST['jenis_supplier'];
+function bersih($data)
+{
+    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+}
+
+$nama = bersih($_POST['nama'] ?? '');
+$alamat = bersih($_POST['alamat'] ?? '');
+$no_telp = bersih($_POST['no_telp'] ?? '');
+$no_npwp = bersih($_POST['no_npwp'] ?? '');
+$jenis_supplier = bersih($_POST['jenis_supplier'] ?? '');
 
 $sql = "INSERT INTO supplier (nama, alamat, no_telp, no_npwp, jenis_supplier) VALUES (?, ?, ?, ?, ?)";
 $stmt = $koneksi->prepare($sql);

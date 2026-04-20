@@ -1,6 +1,7 @@
 <?php
 require_once '../auth.php';
 include "../koneksi.php";
+include_once '../includes/image_helper.php';
 
 $id = $_GET['id'] ?? '';
 
@@ -14,8 +15,9 @@ $stmt_foto = $koneksi->prepare($sql_foto);
 $stmt_foto->execute([$id]);
 $data = $stmt_foto->fetch();
 
-if (!empty($data['foto']) && file_exists('uploads/' . $data['foto'])) {
-    unlink('uploads/' . $data['foto']);
+// Hapus foto utama + thumbnail (thumbs/) sekaligus
+if (!empty($data['foto'])) {
+    hapus_gambar($data['foto'], 'uploads/');
 }
 
 $sql = "DELETE FROM kategori WHERE id_kategori = ?";

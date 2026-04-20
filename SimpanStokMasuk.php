@@ -1,12 +1,18 @@
 <?php
 require_once 'auth.php';
+csrf_check();
 include 'koneksi.php';
 
-$tipe_supplier = $_POST['tipe_supplier'];
-$kode_produk = $_POST['kode_produk'];
-$tgl_transaksi = $_POST['tgl_transaksi'];
-$tgl_kadaluarsa = !empty($_POST['tgl_kadaluarsa']) ? $_POST['tgl_kadaluarsa'] : null;
-$jumlah = (int) $_POST['jumlah'];
+function bersih($data)
+{
+    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+}
+
+$tipe_supplier = bersih($_POST['tipe_supplier'] ?? '');
+$kode_produk = bersih($_POST['kode_produk'] ?? '');
+$tgl_transaksi = bersih($_POST['tgl_transaksi'] ?? '');
+$tgl_kadaluarsa = !empty($_POST['tgl_kadaluarsa']) ? bersih($_POST['tgl_kadaluarsa']) : null;
+$jumlah = (int) ($_POST['jumlah'] ?? 0);
 
 if ($jumlah <= 0) {
     $_SESSION['stok_masuk_error'] = 'Jumlah harus lebih dari 0!';
@@ -16,11 +22,11 @@ if ($jumlah <= 0) {
 
 // Tentukan id_supplier
 if ($tipe_supplier == 'baru') {
-    $nama = $_POST['nama'];
-    $alamat = $_POST['alamat'];
-    $no_telp = $_POST['no_telp'];
-    $no_npwp = $_POST['no_npwp'];
-    $jenis_supplier = $_POST['jenis_supplier'];
+    $nama = bersih($_POST['nama'] ?? '');
+    $alamat = bersih($_POST['alamat'] ?? '');
+    $no_telp = bersih($_POST['no_telp'] ?? '');
+    $no_npwp = bersih($_POST['no_npwp'] ?? '');
+    $jenis_supplier = bersih($_POST['jenis_supplier'] ?? '');
 
     $sql = "INSERT INTO supplier (nama, alamat, no_telp, no_npwp, jenis_supplier) VALUES (?, ?, ?, ?, ?)";
     $stmt = $koneksi->prepare($sql);
@@ -36,7 +42,7 @@ if ($tipe_supplier == 'baru') {
     }
     $stmt = null;
 } else {
-    $id_supplier = $_POST['id_supplier'];
+    $id_supplier = (int) ($_POST['id_supplier'] ?? 0);
 }
 
 // Get harga satuan dari kategori produk

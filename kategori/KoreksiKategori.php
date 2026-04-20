@@ -50,6 +50,7 @@ if (!$row) {
                     <?php endif; ?>
 
                     <form action="SimpanKoreksiKategori.php" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                         <input type="hidden" name="id" value="<?= $row['id_kategori'] ?>">
                         <input type="hidden" name="foto_lama" value="<?= $row['foto'] ?>">
 

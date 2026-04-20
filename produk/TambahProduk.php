@@ -36,10 +36,17 @@ $kategori = $koneksi->query("SELECT * FROM kategori ORDER BY nama_kategori")->fe
             <div class="content">
                 <div class="card" style="max-width: 600px;">
                     <form action="SimpanProduk.php" method="POST">
+                        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                         <div class="form-group">
                             <label class="form-label">Kode Produk</label>
                             <input type="text" name="kode_produk" class="form-control" required
                                 pattern="[A-Za-z0-9]{1,10}" placeholder="Contoh: P001, ELK01">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Nama Produk</label>
+                            <input type="text" name="nama_produk" class="form-control" required maxlength="100"
+                                placeholder="Contoh: Laptop Lenovo ThinkPad">
                         </div>
 
                         <div class="form-group">

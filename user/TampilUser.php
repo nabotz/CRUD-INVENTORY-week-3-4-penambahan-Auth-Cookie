@@ -58,8 +58,9 @@ $result = $koneksi->query("SELECT * FROM users ORDER BY nama")->fetchAll();
                                 foreach ($result as $row): ?>
                                     <tr>
                                         <td><?= $no++ ?></td>
-                                        <td><img src="uploads/<?= htmlspecialchars($row['foto']) ?>"
-                                                alt="<?= htmlspecialchars($row['nama']) ?>"></td>
+                                        <td><img src="uploads/thumbs/<?= htmlspecialchars($row['foto']) ?>"
+                                                alt="<?= htmlspecialchars($row['nama']) ?>"
+                                                onerror="this.src='uploads/<?= htmlspecialchars($row['foto']) ?>'"></td>
                                         <td><strong><?= htmlspecialchars($row['username']) ?></strong></td>
                                         <td><?= htmlspecialchars($row['nama']) ?></td>
                                         <td><?= htmlspecialchars($row['email']) ?></td>

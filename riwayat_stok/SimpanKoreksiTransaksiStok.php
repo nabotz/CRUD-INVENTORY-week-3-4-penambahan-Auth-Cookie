@@ -1,5 +1,6 @@
 <?php
 require_once '../auth.php';
+csrf_check();
 include "../koneksi.php";
 
 $id = $_POST['id'];

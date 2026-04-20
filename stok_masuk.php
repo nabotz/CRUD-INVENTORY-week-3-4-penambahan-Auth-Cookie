@@ -39,6 +39,7 @@ unset($_SESSION['stok_masuk_error'], $_SESSION['stok_masuk_success']);
                 <?php endif; ?>
 
                 <form action="SimpanStokMasuk.php" method="POST" id="formStokMasuk">
+                    <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                         <!-- Data Supplier -->
                         <div class="card">

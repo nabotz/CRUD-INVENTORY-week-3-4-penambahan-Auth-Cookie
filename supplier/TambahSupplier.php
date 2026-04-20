@@ -34,6 +34,7 @@ $current_page = 'supplier';
             <div class="content">
                 <div class="card" style="max-width: 600px;">
                     <form action="SimpanSupplier.php" method="POST">
+                        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                         <div class="form-group">
                             <label class="form-label">Nama Supplier</label>
                             <input type="text" name="nama" class="form-control" required minlength="3"

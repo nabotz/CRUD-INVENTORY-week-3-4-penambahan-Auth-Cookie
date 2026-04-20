@@ -1,6 +1,8 @@
 <?php
 require_once '../auth.php';
+csrf_check();
 include "../koneksi.php";
+include_once '../includes/image_helper.php';
 
 /* ================== FUNGSI SANITASI ================== */
 function bersih($data)
@@ -25,15 +27,29 @@ if (empty($id)) {
 $xfoto = $foto_lama;
 
 // Jika user upload foto baru
-if (!empty($_FILES['foto']['name'])) {
-    $namaFile = $_FILES['foto']['name'];
+if (!empty($_FILES['foto']['name']) && $_FILES['foto']['error'] == 0) {
     $tmpFile = $_FILES['foto']['tmp_name'];
-    $ext = strtolower(pathinfo($namaFile, PATHINFO_EXTENSION));
-    $allowedExt = ['jpg', 'jpeg', 'png', 'gif'];
+    $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
 
-    if (in_array($ext, $allowedExt)) {
-        $namaFotoBaru = uniqid("foto_") . "." . $ext;
-        move_uploaded_file($tmpFile, "uploads/" . $namaFotoBaru);
+    if ($_FILES['foto']['size'] > 2 * 1024 * 1024) {
+        header('Location: KoreksiUser.php?id=' . urlencode($id) . '&error=ukuran');
+        exit;
+    }
+
+    if (!in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])) {
+        header('Location: KoreksiUser.php?id=' . urlencode($id) . '&error=format');
+        exit;
+    }
+
+    $mime = mime_content_type($tmpFile);
+    if (!in_array($mime, ['image/jpeg', 'image/png', 'image/gif']) || !getimagesize($tmpFile)) {
+        header('Location: KoreksiUser.php?id=' . urlencode($id) . '&error=format');
+        exit;
+    }
+
+    $namaFotoBaru = proses_gambar($_FILES['foto'], 'uploads/');
+    if ($namaFotoBaru) {
+        hapus_gambar($foto_lama, 'uploads/');
         $xfoto = $namaFotoBaru;
     }
 }

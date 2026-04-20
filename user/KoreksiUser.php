@@ -48,6 +48,7 @@ if (!$row) {
                     </div>
 
                     <form action="SimpanKoreksiUser.php" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                         <input type="hidden" name="id" value="<?= $row['id'] ?>">
                         <input type="hidden" name="foto_lama" value="<?= $row['foto'] ?>">
 

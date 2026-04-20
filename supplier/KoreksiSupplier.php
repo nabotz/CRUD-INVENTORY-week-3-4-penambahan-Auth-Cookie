@@ -43,6 +43,7 @@ if (!$row) {
             <div class="content">
                 <div class="card" style="max-width: 600px;">
                     <form action="SimpanKoreksiSupplier.php" method="POST">
+                        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                         <input type="hidden" name="id" value="<?= $row['id_supplier'] ?>">
 
                         <div class="form-group">

@@ -1,13 +1,19 @@
 <?php
 require_once '../auth.php';
+csrf_check();
 include "../koneksi.php";
 
-$id = $_POST['id'];
-$nama = $_POST['nama'];
-$alamat = $_POST['alamat'];
-$no_telp = $_POST['no_telp'];
-$no_npwp = $_POST['no_npwp'];
-$jenis_supplier = $_POST['jenis_supplier'];
+function bersih($data)
+{
+    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+}
+
+$id = bersih($_POST['id'] ?? '');
+$nama = bersih($_POST['nama'] ?? '');
+$alamat = bersih($_POST['alamat'] ?? '');
+$no_telp = bersih($_POST['no_telp'] ?? '');
+$no_npwp = bersih($_POST['no_npwp'] ?? '');
+$jenis_supplier = bersih($_POST['jenis_supplier'] ?? '');
 
 $sql = "UPDATE supplier SET nama = ?, alamat = ?, no_telp = ?, no_npwp = ?, jenis_supplier = ? WHERE id_supplier = ?";
 $stmt = $koneksi->prepare($sql);

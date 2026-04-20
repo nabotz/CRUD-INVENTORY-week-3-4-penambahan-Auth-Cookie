@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'koneksi.php';
+include_once 'includes/csrf.php';
 
 $error = '';
 $success = '';
@@ -48,6 +49,7 @@ if (isset($_SESSION['user_id'])) {
             <?php endif; ?>
 
             <form action="SimpanRegister.php" method="POST" enctype="multipart/form-data" id="formRegister">
+                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                 <div class="form-group">
                     <label class="form-label">Foto Profil</label>
                     <div class="file-input-wrapper">

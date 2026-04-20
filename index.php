@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'koneksi.php';
+include_once 'includes/csrf.php';
 
 // Cek jika sudah login
 if (isset($_SESSION['username'])) {
@@ -11,6 +12,7 @@ if (isset($_SESSION['username'])) {
 // Proses login (harus sebelum output HTML)
 $error = '';
 if (isset($_POST['login'])) {
+    csrf_check();
     $username = $_POST['username'];
     $password = $_POST['password'];
 
@@ -20,6 +22,7 @@ if (isset($_POST['login'])) {
 
     if ($user) {
         if (password_verify($password, $user['password'])) {
+            session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['nama'] = $user['nama'];
@@ -31,8 +34,9 @@ if (isset($_POST['login'])) {
                 $tokenHash = hash('sha256', $token);
                 $stmt = $koneksi->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
                 $stmt->execute([$tokenHash, $user['id']]);
-                setcookie("remember_token", $token, time() + (86400 * 30), "/", "", false, true);
-                setcookie("remember_user", $user['id'], time() + (86400 * 30), "/", "", false, true);
+                $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+                setcookie("remember_token", $token, ['expires' => time() + (86400 * 30), 'path' => '/', 'httponly' => true, 'secure' => $isSecure, 'samesite' => 'Strict']);
+                setcookie("remember_user", $user['id'], ['expires' => time() + (86400 * 30), 'path' => '/', 'httponly' => true, 'secure' => $isSecure, 'samesite' => 'Strict']);
             }
 
             header("location:menu.php");
@@ -71,6 +75,7 @@ if (isset($_POST['login'])) {
             <?php endif; ?>
 
             <form method="post">
+                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                 <div class="form-group">
                     <label class="form-label">Username</label>
                     <input type="text" name="username" class="form-control" placeholder="Masukkan username" required

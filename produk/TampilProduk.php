@@ -43,6 +43,7 @@ $result = $koneksi->query("SELECT p.*, k.nama_kategori, k.harga_satuan FROM prod
                                 <tr>
                                     <th>No</th>
                                     <th>Kode Produk</th>
+                                    <th>Nama Produk</th>
                                     <th>Kategori</th>
                                     <th>Lokasi</th>
                                     <th>Harga Satuan</th>
@@ -55,6 +56,7 @@ $result = $koneksi->query("SELECT p.*, k.nama_kategori, k.harga_satuan FROM prod
                                     <tr>
                                         <td><?= $no++ ?></td>
                                         <td><strong><?= htmlspecialchars($row['kode_produk']) ?></strong></td>
+                                        <td><?= htmlspecialchars($row['nama_produk']) ?></td>
                                         <td><?= htmlspecialchars($row['nama_kategori']) ?></td>
                                         <td><?= htmlspecialchars($row['lokasi']) ?></td>
                                         <td>Rp <?= number_format($row['harga_satuan'], 0, ',', '.') ?></td>

@@ -1,4 +1,5 @@
 <?php
+require_once '../auth.php';
 require __DIR__ . '/fpdf186/fpdf.php';
 require '../koneksi.php';
 
@@ -12,23 +13,34 @@ class PDF extends FPDF
     }
 }
 
-$bulan = $_GET['bulan'] ?? '';
-$tahun = $_GET['tahun'] ?? date('Y');
+$bulan = (int) ($_GET['bulan'] ?? 0);
+$tahun = (int) ($_GET['tahun'] ?? date('Y'));
 $bulan_nama = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
-$sql = "SELECT ts.*, s.nama, p.kode_produk as kode, k.nama_kategori
-        FROM transaksi_stok ts
-        JOIN supplier s ON ts.id_supplier = s.id_supplier
-        JOIN produk p ON ts.kode_produk = p.kode_produk
-        JOIN kategori k ON p.id_kategori = k.id_kategori
-        WHERE YEAR(ts.tgl_transaksi) = '$tahun'";
-
-if (!empty($bulan)) {
-    $sql .= " AND MONTH(ts.tgl_transaksi) = '$bulan'";
+if ($bulan > 0) {
+    $stmt = $koneksi->prepare(
+        "SELECT ts.*, s.nama, p.kode_produk as kode, k.nama_kategori
+         FROM transaksi_stok ts
+         JOIN supplier s ON ts.id_supplier = s.id_supplier
+         JOIN produk p ON ts.kode_produk = p.kode_produk
+         JOIN kategori k ON p.id_kategori = k.id_kategori
+         WHERE YEAR(ts.tgl_transaksi) = ? AND MONTH(ts.tgl_transaksi) = ?
+         ORDER BY ts.tgl_transaksi DESC"
+    );
+    $stmt->execute([$tahun, $bulan]);
+} else {
+    $stmt = $koneksi->prepare(
+        "SELECT ts.*, s.nama, p.kode_produk as kode, k.nama_kategori
+         FROM transaksi_stok ts
+         JOIN supplier s ON ts.id_supplier = s.id_supplier
+         JOIN produk p ON ts.kode_produk = p.kode_produk
+         JOIN kategori k ON p.id_kategori = k.id_kategori
+         WHERE YEAR(ts.tgl_transaksi) = ?
+         ORDER BY ts.tgl_transaksi DESC"
+    );
+    $stmt->execute([$tahun]);
 }
-$sql .= " ORDER BY ts.tgl_transaksi DESC";
-
-$result = $koneksi->query($sql)->fetchAll();
+$result = $stmt->fetchAll();
 
 $pdf = new PDF('L', 'mm', 'A4');
 $pdf->AddPage();

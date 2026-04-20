@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once __DIR__ . '/includes/csrf.php';
 
 // Cek apakah user sudah login
 if (!isset($_SESSION['user_id'])) {

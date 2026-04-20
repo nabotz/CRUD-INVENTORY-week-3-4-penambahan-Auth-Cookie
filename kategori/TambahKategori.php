@@ -34,6 +34,7 @@ $current_page = 'kategori';
             <div class="content">
                 <div class="card" style="max-width: 600px;">
                     <form action="SimpanKategori.php" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                         <div class="form-group">
                             <label class="form-label">Foto Kategori</label>
                             <input type="file" name="foto_kamar" class="form-control" accept="image/*">
